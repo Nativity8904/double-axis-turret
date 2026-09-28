@@ -43,7 +43,7 @@ float Stats<T>::getStd() const {
     }
 
     float variance = squaredDifferenceSum / 128.0f;
-    return sqrt(squaredDifferenceSum);
+    return sqrt(variance);
 }
 
 #endif // STATS_H

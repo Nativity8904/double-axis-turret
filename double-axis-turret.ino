@@ -16,7 +16,7 @@ constexpr uint8_t LASER = 11;
 
 Mpu6050 mpu{MPU_ADDR};
 TurretController turret{TILT_SERVO, PAN_SERVO, LASER};
-Stats<uint8_t> rawAccelXStats{};
+Stats<int16_t> rawAccelXStats{};
 
 void setup() {
     Serial.begin(BAUD_RATE);
@@ -45,9 +45,18 @@ void loop() {
     // F Keeps the string in flash memory
     Serial.print(F("AccelX mean: "));
     Serial.print(rawAccelXStats.getMean());
-    Serial.print(F(" | "));
-    Serial.print(F("AccelX std: "));
+    Serial.print(F(" | AccelX std: "));
     Serial.print(rawAccelXStats.getStd());
+    Serial.print(F(" | AccelX: "));
+    Serial.print(mpu.getRawAccelX());
+    Serial.print(F(" | AccelY: "));
+    Serial.print(mpu.getRawAccelY());
+    Serial.print(F(" | AccelZ: "));
+    Serial.print(mpu.getRawAccelZ());
+    Serial.print(F(" | Pitch (deg): "));
+    Serial.print(pitchDegree);
+    Serial.print(F(" | Roll (deg): "));
+    Serial.print(rollDegree);
 
     Serial.println();
 

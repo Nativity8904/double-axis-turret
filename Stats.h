@@ -1,9 +1,13 @@
 #ifndef STATS_H
 #define STATS_H
 
+constexpr int SAMPLE_COUNT = 128;
+
 template<typename T>
 class Stats {
-    T rawSamples[128];
+    T rawSamples[SAMPLE_COUNT];
+    int rawSamplesIndex;
+    bool didRawSamplesCycle;
 
 public:
     Stats();
@@ -14,35 +18,46 @@ public:
 };
 
 template<typename T>
-Stats<T>::Stats() : rawSamples{} {}
+Stats<T>::Stats() : rawSamples{}, rawSamplesIndex(0), didRawSamplesCycle(false) {}
 
 template<typename T>
 void Stats<T>::update(T newSample) {
-    for (int i = 126; i >=0; i--) {
-        rawSamples[i + 1] = rawSamples[i];
+    rawSamples[rawSamplesIndex] = newSample;
+
+    rawSamplesIndex = (rawSamplesIndex + 1) % SAMPLE_COUNT;
+
+    if (!didRawSamplesCycle) {
+        if (rawSamplesIndex == 0) { didRawSamplesCycle = true; }
     }
-    rawSamples[0] = newSample;
 }
 
 template<typename T>
 float Stats<T>::getMean() const {
+    int loopCount = (!didRawSamplesCycle) ? rawSamplesIndex : SAMPLE_COUNT;
+    if (loopCount == 0) { return 0.0f; }
+
     float total{0.0f};
-    for (int i = 0; i < 128; i++) {
+
+    for (int i = 0; i < loopCount; i++) {
         total += static_cast<float>(rawSamples[i]);
     }
-    return total / 128.0f;
+
+    return total / loopCount;
 }
 
 template<typename T>
 float Stats<T>::getStd() const {
+    int loopCount = (!didRawSamplesCycle) ? rawSamplesIndex : SAMPLE_COUNT;
+    if (loopCount == 0) { return 0.0f; }
+
     float mean = this->getMean();
 
     float squaredDifferenceSum = 0.0f;
-    for (int i = 0; i < 128; i++) {
+    for (int i = 0; i < loopCount; i++) {
         squaredDifferenceSum += (static_cast<float>(rawSamples[i]) - mean) * (static_cast<float>(rawSamples[i]) - mean);
     }
 
-    float variance = squaredDifferenceSum / 128.0f;
+    float variance = squaredDifferenceSum / loopCount;
     return sqrt(variance);
 }
 

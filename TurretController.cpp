@@ -4,7 +4,7 @@
 #include "TurretController.h"
 
 TurretController::TurretController(uint8_t tiltServoPin, uint8_t panServoPin, uint8_t laserPin) :
-    tiltServoPin(tiltServoPin), panServoPin(panServoPin), laserPin(laserPin), tilt(90), pan(90) {}
+    tiltServoPin(tiltServoPin), panServoPin(panServoPin), laserPin(laserPin), tiltAngle(90), panAngle(90) {}
 
 void TurretController::begin() {
     tiltServo.attach(tiltServoPin);
@@ -30,17 +30,17 @@ void TurretController::update(float pitchDegree, float rollDegree) {
     int constrainedRoll = constrain(static_cast<int>(rollDegree), -90, 90);
 
     // Projects contrained roll and pitch [-90, 90] onto a valid servo range [0, 180]
-    tilt = map(constrainedPitch, -90, 90, 180, 0);
-    pan = map(constrainedRoll, -90, 90, 0, 180);
+    tiltAngle = map(constrainedPitch, -90, 90, 180, 0);
+    panAngle = map(constrainedRoll, -90, 90, 0, 180);
 
-    tiltServo.write(tilt);
-    panServo.write(pan);
+    tiltServo.write(tiltAngle);
+    panServo.write(panAngle);
 }
 
-int TurretController::getTilt() const {
-    return tilt;
+int TurretController::getTiltAngle() const {
+    return tiltAngle;
 }
 
-int TurretController::getPan() const {
-    return pan;
+int TurretController::getPanAngle() const {
+    return panAngle;
 }

@@ -8,7 +8,7 @@
 constexpr uint32_t BAUD_RATE = 115200;
 constexpr uint32_t BUS_CLOCK = 400000;
 
-constexpr uint8_t MPU_ADDR = 0x68;
+constexpr uint8_t MPU_ADDR = 0x68; // AD0 Grounded
 
 constexpr uint8_t TILT_SERVO = 9;
 constexpr uint8_t PAN_SERVO = 10;
@@ -20,7 +20,7 @@ Stats<int16_t> rawAccelXStats{};
 
 void setup() {
     Serial.begin(BAUD_RATE);
-    delay(100);
+    delay(100); // 100 ms
 
     Wire.begin();
     Wire.setClock(BUS_CLOCK);

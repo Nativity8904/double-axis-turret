@@ -12,8 +12,8 @@ class TurretController {
     Servo tiltServo;
     Servo panServo;
 
-    int tilt;
-    int pan;
+    int tiltAngle;
+    int panAngle;
 
 public:
     TurretController(uint8_t tiltServoPin, uint8_t panServoPin, uint8_t laserPin);
@@ -22,8 +22,8 @@ public:
     void begin();
     void update(float pitchDegree, float rollDegree);
 
-    int getTilt() const;
-    int getPan() const;
+    int getTiltAngle() const;
+    int getPanAngle() const;
 };
 
 #endif // TURRETCONTROLLER_H
